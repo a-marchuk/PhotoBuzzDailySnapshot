@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ua.marchuk.photoBuzzDailySnapshot.data.repository.PhotoRepository
-import ua.marchuk.photoBuzzDailySnapshot.domain.Photo
+import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
 import javax.inject.Inject
 
 @HiltViewModel

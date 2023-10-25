@@ -6,8 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ua.marchuk.photoBuzzDailySnapshot.data.model.room.LocalDatabase
 import ua.marchuk.photoBuzzDailySnapshot.data.model.room.PhotoDao
-import ua.marchuk.photoBuzzDailySnapshot.data.model.room.PhotoDatabase
 import ua.marchuk.photoBuzzDailySnapshot.data.repository.PhotoRepository
 import javax.inject.Singleton
 
@@ -18,7 +18,7 @@ object MainModule {
     @Provides
     @Singleton
     fun providePhotoDao(application: Application): PhotoDao {
-        val database = databaseBuilder(application, PhotoDatabase::class.java, "photo_database")
+        val database = databaseBuilder(application, LocalDatabase::class.java, "photo_database")
             .build()
         return database.photoDao()
     }

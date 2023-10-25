@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ua.marchuk.photoBuzzDailySnapshot.data.api.flickr.FlickrInstance
-import ua.marchuk.photoBuzzDailySnapshot.data.model.apiresponse.PhotoResponse
+import ua.marchuk.photoBuzzDailySnapshot.data.api.apiresponse.PhotoResponse
 import ua.marchuk.photoBuzzDailySnapshot.data.model.room.PhotoDao
-import ua.marchuk.photoBuzzDailySnapshot.domain.Photo
+import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
 import ua.marchuk.photoBuzzDailySnapshot.utility.fromEntity
 import ua.marchuk.photoBuzzDailySnapshot.utility.toEntity
 import javax.inject.Inject
@@ -15,6 +15,7 @@ import javax.inject.Inject
 class PhotoRepository @Inject constructor(
     private val photoDao: PhotoDao,
 ) {
+
     val photosLiveData: MutableLiveData<List<Photo>> = MutableLiveData()
 
     private suspend fun getPhotosBlocking(): List<Photo> {
@@ -24,31 +25,39 @@ class PhotoRepository @Inject constructor(
     }
 
     private suspend fun updatePhotos(localPhotos: List<Photo>, newPhotos: List<Photo>) {
-        val newPhotosSet = HashSet(newPhotos)
-        val updatedPhotos = ArrayList<Photo>()
+        val existingPhotoIds = localPhotos.map { it.id }
 
-        // Додайте нові фотографії
+        val newPhotosToInsert = mutableListOf<Photo>()
+
         for (photo in newPhotos) {
-            if (!localPhotos.contains(photo)) {
-                updatedPhotos.add(photo)
+            if (photo.id !in existingPhotoIds) {
+                newPhotosToInsert.add(photo)
             }
         }
 
-        // Видаліть застарі фотографії
-        for (photo in localPhotos) {
-            if (!newPhotosSet.contains(photo)) {
-                photoDao.deletePhoto(photo.toEntity())
-            }
+        // Видалення застарілих фотографій, які виходять за межі 30
+        if (localPhotos.size + newPhotosToInsert.size > 30) {
+            val photosToKeep = localPhotos.sortedByDescending { it.timestamp }
+                .subList(0, minOf(30, localPhotos.size))
+            val idsToKeep = photosToKeep.map { it.id }
+            photoDao.deletePhotosExcept(idsToKeep)
         }
 
-        // Вставте нові фотографії
-        photoDao.insertPhotos(updatedPhotos.map { it.toEntity() })
+        // Вставка нових фотографій
+        if (newPhotosToInsert.isNotEmpty()) {
+            photoDao.insertPhotos(newPhotosToInsert.map { it.toEntity() })
+        }
 
-        // Оновіть LiveData, щоб сповістити про зміни в даних
+        // Оновлення LiveData, щоб сповістити про зміни в даних
         withContext(Dispatchers.Main) {
-            photosLiveData.postValue(updatedPhotos.toList())
+            val updatedPhotos = localPhotos.toMutableList()
+            updatedPhotos.addAll(newPhotosToInsert)
+            photosLiveData.postValue(updatedPhotos)
         }
     }
+
+
+
 
     suspend fun loadPhotos() {
         try {
@@ -56,7 +65,8 @@ class PhotoRepository @Inject constructor(
                 FlickrInstance.flickrService.getInterestingPhotosList(
                     "flickr.interestingness.getList",
                     API_KEY,
-                    "url_h",
+                    "url_h, date_upload",
+                    "30",
                     "json",
                     1
                 ).execute()
@@ -85,7 +95,8 @@ class PhotoRepository @Inject constructor(
                 id = photoResponse.id.toLong(),
                 url = "https://farm${photoResponse.farm}.staticflickr.com/${photoResponse.server}/" +
                         "${photoResponse.id}_${photoResponse.secret}.jpg",
-                title = photoResponse.title
+                title = photoResponse.title,
+                timestamp = photoResponse.dateupload.toLong()
             )
 
             Log.d("MyLink", "URL: ${photo.url}")

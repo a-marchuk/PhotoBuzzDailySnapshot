@@ -1,4 +1,4 @@
-package ua.marchuk.photoBuzzDailySnapshot.data.model.apiresponse
+package ua.marchuk.photoBuzzDailySnapshot.data.api.apiresponse
 
 import com.google.gson.annotations.SerializedName
 
@@ -7,7 +7,6 @@ data class PhotosSearchResponse(
     @SerializedName("photos") val photos: PhotosMetaData,
     @SerializedName("stat") val stat: String
 )
-
 
 data class PhotosMetaData(
     val page: Int,
@@ -18,17 +17,19 @@ data class PhotosMetaData(
 )
 
 data class PhotoResponse(
-    val farm: Int,
-    val height_h: Int,
-    val id: String,
-    val isfamily: Int,
-    val isfriend: Int,
-    val ispublic: Int,
-    val owner: String,
-    val secret: String,
-    val server: String,
-    val title: String,
-    val url_h: String,
-    val width_h: Int
+     val dateupload: String,
+     val farm: Int,
+     val height_h: Int,
+     val id: String,
+     val isfamily: Int,
+     val isfriend: Int,
+     val ispublic: Int,
+     val owner: String,
+     val secret: String,
+     val server: String,
+     val title: String,
+     val url_h: String,
+     val width_h: Int
 )
+
 

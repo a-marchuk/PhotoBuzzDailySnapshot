@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import ua.marchuk.photoBuzzDailySnapshot.domain.Photo
+import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
 import ua.marchuk.photobuzz_dailyshapshot.R
 
 class PhotosAdapter : RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder>() {

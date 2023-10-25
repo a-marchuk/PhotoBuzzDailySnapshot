@@ -5,19 +5,23 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import ua.marchuk.photoBuzzDailySnapshot.domain.Photo
+import androidx.room.Query
 
 @Dao
 interface PhotoDao {
-    @androidx.room.Query("SELECT * FROM photo")
-    fun getPhotosLiveData(): LiveData<List<PhotoDB>>
+    @Query("SELECT * FROM photo")
+    fun getPhotosLiveData(): LiveData<List<PhotoEntity>>
 
-    @androidx.room.Query("SELECT * FROM photo")
-    fun getPhotos(): List<PhotoDB>
+    @Query("SELECT * FROM photo")
+    fun getPhotos(): List<PhotoEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPhotos(photos: List<PhotoDB>)
+    suspend fun insertPhotos(photos: List<PhotoEntity>)
 
     @Delete
-    suspend fun deletePhoto(photo: PhotoDB)
+    suspend fun deletePhoto(photo: PhotoEntity)
+
+    @Query("DELETE FROM photo WHERE id NOT IN (:ids)")
+    suspend fun deletePhotosExcept(ids: List<Long>)
+
 }

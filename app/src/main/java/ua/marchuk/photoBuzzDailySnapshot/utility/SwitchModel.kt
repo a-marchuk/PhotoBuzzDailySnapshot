@@ -1,20 +1,22 @@
 package ua.marchuk.photoBuzzDailySnapshot.utility
 
-import ua.marchuk.photoBuzzDailySnapshot.data.model.room.PhotoDB
-import ua.marchuk.photoBuzzDailySnapshot.domain.Photo
+import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
+import ua.marchuk.photoBuzzDailySnapshot.data.model.room.PhotoEntity
 
-fun Photo.toEntity() :PhotoDB {
-    return PhotoDB(
+fun Photo.toEntity() :PhotoEntity {
+    return PhotoEntity(
         id = id,
         url = url,
-        title = title
+        title = title,
+        timestamp = timestamp
     )
 }
 
-fun PhotoDB.fromEntity() :Photo {
+fun PhotoEntity.fromEntity() : Photo {
     return Photo(
         id = id,
         url = url,
-        title = title
+        title = title,
+        timestamp = timestamp
     )
 }
