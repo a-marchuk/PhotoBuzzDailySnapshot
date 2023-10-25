@@ -35,7 +35,6 @@ class PhotoRepository @Inject constructor(
             }
         }
 
-        // Видалення застарілих фотографій, які виходять за межі 30
         if (localPhotos.size + newPhotosToInsert.size > 30) {
             val photosToKeep = localPhotos.sortedByDescending { it.timestamp }
                 .subList(0, minOf(30, localPhotos.size))
@@ -43,12 +42,10 @@ class PhotoRepository @Inject constructor(
             photoDao.deletePhotosExcept(idsToKeep)
         }
 
-        // Вставка нових фотографій
         if (newPhotosToInsert.isNotEmpty()) {
             photoDao.insertPhotos(newPhotosToInsert.map { it.toEntity() })
         }
 
-        // Оновлення LiveData, щоб сповістити про зміни в даних
         withContext(Dispatchers.Main) {
             val updatedPhotos = localPhotos.toMutableList()
             updatedPhotos.addAll(newPhotosToInsert)

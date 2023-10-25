@@ -38,12 +38,10 @@ class PhotosAdapter : RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder>() {
         private val titleTextView: TextView = itemView.findViewById(R.id.item_list_title)
 
         fun bind(photo: Photo) {
-            // Встановлення зображення та тексту для кожного елемента
             photoImageView.load(photo.url) {
-                // Опції Coil для зображення (змініть їх за потребою)
-                crossfade(true) // Застосовувати згортання при зміні зображення
-                placeholder(R.drawable.baseline_sync_24) // Зображення-заповнювач поки завантажується
-                error(R.drawable.baseline_sync_disabled_24) // Зображення помилки, якщо завантаження не вдалося
+                crossfade(true)
+                placeholder(R.drawable.baseline_sync_24)
+                error(R.drawable.baseline_sync_disabled_24)
             }
             titleTextView.text = photo.title
         }
