@@ -1,13 +1,12 @@
 package ua.marchuk.photoBuzzDailySnapshot.presentation.mainFragment
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ua.marchuk.photoBuzzDailySnapshot.data.repository.PhotoRepository
 import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
+import ua.marchuk.photoBuzzDailySnapshot.data.repository.PhotoRepository
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,9 +18,7 @@ class MainFragmentViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            photoRepository.loadPhotos()
-            Log.e("ViewModel", "ViewModel")
-
+            photoRepository.getPhotos()
         }
     }
 }

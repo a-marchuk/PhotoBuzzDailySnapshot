@@ -10,7 +10,7 @@ import coil.load
 import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
 import ua.marchuk.photobuzz_dailyshapshot.R
 
-class PhotosAdapter : RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder>() {
+class PhotosAdapter: RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder>() {
     private var photoList: List<Photo> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
@@ -46,5 +46,7 @@ class PhotosAdapter : RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder>() {
             titleTextView.text = photo.title
         }
     }
+
 }
+
 

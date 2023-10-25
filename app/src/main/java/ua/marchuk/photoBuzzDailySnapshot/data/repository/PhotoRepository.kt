@@ -18,6 +18,11 @@ class PhotoRepository @Inject constructor(
 
     val photosLiveData: MutableLiveData<List<Photo>> = MutableLiveData()
 
+    suspend fun getPhotos(){
+        loadPhotos()
+        photosLiveData.value = getPhotosBlocking()
+    }
+
     private suspend fun getPhotosBlocking(): List<Photo> {
         return withContext(Dispatchers.IO) {
             photoDao.getPhotos().map { it.fromEntity() }
@@ -46,17 +51,14 @@ class PhotoRepository @Inject constructor(
             photoDao.insertPhotos(newPhotosToInsert.map { it.toEntity() })
         }
 
-        withContext(Dispatchers.Main) {
-            val updatedPhotos = localPhotos.toMutableList()
-            updatedPhotos.addAll(newPhotosToInsert)
-            photosLiveData.postValue(updatedPhotos)
-        }
+        // Оновлюємо фотографії в репозиторії, але не в LiveData
+        val updatedPhotos = localPhotos.toMutableList()
+        updatedPhotos.addAll(newPhotosToInsert)
     }
 
 
 
-
-    suspend fun loadPhotos() {
+    private suspend fun loadPhotos() {
         try {
             val response = withContext(Dispatchers.IO) {
                 FlickrInstance.flickrService.getInterestingPhotosList(

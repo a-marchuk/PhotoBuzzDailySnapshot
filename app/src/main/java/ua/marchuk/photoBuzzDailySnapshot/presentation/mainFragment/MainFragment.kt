@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ua.marchuk.photoBuzzDailySnapshot.presentation.adapters.PhotosAdapter
@@ -17,25 +17,30 @@ class MainFragment : Fragment() {
 
     private val viewModel: MainFragmentViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
-    private val adapter = PhotosAdapter()
+    private lateinit var adapter: PhotosAdapter
+
+    private val spanCount = 3
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_main, container, false)
-        recyclerView = view.findViewById(R.id.recycler_view_main)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = adapter
-        return view
+        return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        recyclerView = view.findViewById(R.id.recycler_view_main)
+        adapter = PhotosAdapter()
+
+        recyclerView.layoutManager = GridLayoutManager(context, spanCount)
+        recyclerView.adapter = adapter
+
         viewModel.photosLiveData.observe(viewLifecycleOwner) { photos ->
             adapter.setPhotoList(photos)
         }
     }
+
 }
 
