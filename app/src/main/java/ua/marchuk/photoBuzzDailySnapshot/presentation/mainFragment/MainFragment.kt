@@ -40,6 +40,12 @@ class MainFragment : Fragment() {
         viewModel.photosLiveData.observe(viewLifecycleOwner) { photos ->
             adapter.setPhotoList(photos)
         }
+
+//        adapter.onItemClick = { photo ->
+//            // Використовуйте SafeArgs для передачі даних до InfoFragment
+//            val action = MainFragmentDirections.actionMainFragmentToInfoFragment(photo)
+//            findNavController().navigate(action)
+//        }
     }
 
 }

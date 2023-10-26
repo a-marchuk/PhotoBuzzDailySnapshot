@@ -63,7 +63,7 @@ class PhotoRepository @Inject constructor(
             val response = withContext(Dispatchers.IO) {
                 FlickrInstance.flickrService.getInterestingPhotosList(
                     "flickr.interestingness.getList",
-                    API_KEY,
+                    API_KEY,            //TODO to di
                     "url_h, date_upload",
                     "30",
                     "json",
@@ -83,7 +83,7 @@ class PhotoRepository @Inject constructor(
                 Log.e(TAG, "Unsuccessful API response")
             }
         } catch (e: Exception) {
-            Log.e(TAG + "Exception", "Exception occurred", e)
+            Log.e("$TAG Exception", "Exception occurred", e)
         }
     }
 

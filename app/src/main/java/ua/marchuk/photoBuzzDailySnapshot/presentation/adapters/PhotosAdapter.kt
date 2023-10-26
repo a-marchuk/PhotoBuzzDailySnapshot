@@ -10,8 +10,10 @@ import coil.load
 import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
 import ua.marchuk.photobuzz_dailyshapshot.R
 
-class PhotosAdapter: RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder>() {
+class PhotosAdapter: RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder>() { //TODO ListAdapter with diffutill
     private var photoList: List<Photo> = emptyList()
+
+    var onItemClick : ((Photo) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -22,6 +24,10 @@ class PhotosAdapter: RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder>() {
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val photo = photoList[position]
         holder.bind(photo)
+
+        holder.itemView.setOnClickListener{
+             onItemClick?.invoke(photo)
+        }
     }
 
     override fun getItemCount(): Int {
