@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val BASE_URL = "https://www.flickr.com/"
 
-object FlickrInstance {     //TODO to di
+object FlickrInstance { //todo to Hilt
     private val instance: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)

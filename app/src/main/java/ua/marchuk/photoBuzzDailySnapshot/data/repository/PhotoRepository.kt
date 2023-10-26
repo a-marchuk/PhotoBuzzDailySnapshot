@@ -61,9 +61,9 @@ class PhotoRepository @Inject constructor(
     private suspend fun loadPhotos() {
         try {
             val response = withContext(Dispatchers.IO) {
-                FlickrInstance.flickrService.getInterestingPhotosList(
+                FlickrInstance.flickrService.getInterestingPhotosList(      //todo by hilt
                     "flickr.interestingness.getList",
-                    API_KEY,            //TODO to di
+                    API_KEY,
                     "url_h, date_upload",
                     "30",
                     "json",

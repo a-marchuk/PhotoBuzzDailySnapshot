@@ -8,6 +8,11 @@ plugins {
 
     // Symbol Processing: KSP (for Moshi, Room) and Kapt (for Hilt)
     id("com.google.devtools.ksp")
+
+    // Safe Args
+    id("androidx.navigation.safeargs")
+
+
     kotlin("kapt")
 }
 
@@ -40,6 +45,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+    }
+    buildFeatures {
+        viewBinding = true
     }
 }
 

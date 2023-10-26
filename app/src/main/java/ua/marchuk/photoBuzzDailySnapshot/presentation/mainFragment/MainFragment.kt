@@ -6,47 +6,57 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
+import ua.marchuk.photoBuzzDailySnapshot.presentation.adapters.AdapterInterface
 import ua.marchuk.photoBuzzDailySnapshot.presentation.adapters.PhotosAdapter
-import ua.marchuk.photobuzz_dailyshapshot.R
+import ua.marchuk.photobuzz_dailyshapshot.databinding.FragmentMainBinding
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
 
     private val viewModel: MainFragmentViewModel by viewModels()
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var binding: FragmentMainBinding
     private lateinit var adapter: PhotosAdapter
-
-    private val spanCount = 3
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+    ): View {
+        binding = FragmentMainBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = view.findViewById(R.id.recycler_view_main)
-        adapter = PhotosAdapter()
-
-        recyclerView.layoutManager = GridLayoutManager(context, spanCount)
-        recyclerView.adapter = adapter
-
-        viewModel.photosLiveData.observe(viewLifecycleOwner) { photos ->
-            adapter.setPhotoList(photos)
-        }
-
-//        adapter.onItemClick = { photo ->
-//            // Використовуйте SafeArgs для передачі даних до InfoFragment
-//            val action = MainFragmentDirections.actionMainFragmentToInfoFragment(photo)
-//            findNavController().navigate(action)
-//        }
+        navController = findNavController()
+        initializeRecyclerView()
+        observePhotosLiveData()
     }
 
+    private fun initializeRecyclerView() {
+        adapter = PhotosAdapter(object : AdapterInterface {
+            override fun onItemClick(photo: Photo) {
+                navigateToInfoFragment(photo)
+            }
+        })
+        binding.recyclerViewMain.adapter = adapter
+    }
+
+    private fun observePhotosLiveData() {
+        viewModel.photosLiveData.observe(viewLifecycleOwner) { photos ->
+            adapter.submitList(photos)
+        }
+    }
+
+    private fun navigateToInfoFragment(photo: Photo) {
+        navController.navigate(MainFragmentDirections.actionMainFragmentToInfoFragment(photo))
+    }
 }
+
+
 
