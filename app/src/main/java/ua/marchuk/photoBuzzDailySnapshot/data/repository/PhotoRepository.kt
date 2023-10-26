@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ua.marchuk.photoBuzzDailySnapshot.data.api.flickr.FlickrInstance
 import ua.marchuk.photoBuzzDailySnapshot.data.api.apiresponse.PhotoResponse
-import ua.marchuk.photoBuzzDailySnapshot.data.model.room.PhotoDao
+import ua.marchuk.photoBuzzDailySnapshot.data.api.flickr.FlickrInstance
 import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
+import ua.marchuk.photoBuzzDailySnapshot.data.model.room.PhotoDao
 import ua.marchuk.photoBuzzDailySnapshot.utility.fromEntity
 import ua.marchuk.photoBuzzDailySnapshot.utility.toEntity
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class PhotoRepository @Inject constructor(
 
     val photosLiveData: MutableLiveData<List<Photo>> = MutableLiveData()
 
-    suspend fun getPhotos(){
+    suspend fun getPhotos() {
         loadPhotos()
         photosLiveData.value = getPhotosBlocking()
     }
@@ -40,28 +40,23 @@ class PhotoRepository @Inject constructor(
             }
         }
 
+        if (newPhotosToInsert.isNotEmpty()) {
+            photoDao.insertPhotos(newPhotosToInsert.map { it.toEntity() })
+        }
+
         if (localPhotos.size + newPhotosToInsert.size > 30) {
             val photosToKeep = localPhotos.sortedByDescending { it.timestamp }
                 .subList(0, minOf(30, localPhotos.size))
             val idsToKeep = photosToKeep.map { it.id }
             photoDao.deletePhotosExcept(idsToKeep)
         }
-
-        if (newPhotosToInsert.isNotEmpty()) {
-            photoDao.insertPhotos(newPhotosToInsert.map { it.toEntity() })
-        }
-
-        // Оновлюємо фотографії в репозиторії, але не в LiveData
-        val updatedPhotos = localPhotos.toMutableList()
-        updatedPhotos.addAll(newPhotosToInsert)
     }
-
 
 
     private suspend fun loadPhotos() {
         try {
             val response = withContext(Dispatchers.IO) {
-                FlickrInstance.flickrService.getInterestingPhotosList(      //todo by hilt
+                FlickrInstance.flickrService.getInterestingPhotosList(
                     "flickr.interestingness.getList",
                     API_KEY,
                     "url_h, date_upload",

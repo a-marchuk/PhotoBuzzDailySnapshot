@@ -2,7 +2,6 @@ package ua.marchuk.photoBuzzDailySnapshot.data.api.apiresponse
 
 import com.google.gson.annotations.SerializedName
 
-// The outermost wrapper for the api response
 data class PhotosSearchResponse(
     @SerializedName("photos") val photos: PhotosMetaData,
     @SerializedName("stat") val stat: String

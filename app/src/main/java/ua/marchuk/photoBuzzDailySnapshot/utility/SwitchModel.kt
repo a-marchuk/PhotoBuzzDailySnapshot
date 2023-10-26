@@ -3,7 +3,7 @@ package ua.marchuk.photoBuzzDailySnapshot.utility
 import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
 import ua.marchuk.photoBuzzDailySnapshot.data.model.room.PhotoEntity
 
-fun Photo.toEntity() :PhotoEntity {
+fun Photo.toEntity(): PhotoEntity {
     return PhotoEntity(
         id = id,
         url = url,
@@ -12,7 +12,7 @@ fun Photo.toEntity() :PhotoEntity {
     )
 }
 
-fun PhotoEntity.fromEntity() : Photo {
+fun PhotoEntity.fromEntity(): Photo {
     return Photo(
         id = id,
         url = url,

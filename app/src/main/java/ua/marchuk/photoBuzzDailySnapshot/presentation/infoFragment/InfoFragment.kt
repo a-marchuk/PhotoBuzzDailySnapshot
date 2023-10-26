@@ -5,14 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
+import dagger.hilt.android.AndroidEntryPoint
 import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
 import ua.marchuk.photobuzz_dailyshapshot.R
 import ua.marchuk.photobuzz_dailyshapshot.databinding.FragmentInfoBinding
 
+@AndroidEntryPoint
 class InfoFragment : Fragment() {
 
+    private val viewModel: InfoFragmentViewModel by viewModels()
     private lateinit var binding: FragmentInfoBinding
     private val args: InfoFragmentArgs by navArgs()
 
@@ -29,10 +33,16 @@ class InfoFragment : Fragment() {
 
         val photo = args.photo
 
-        setInfo(photo)
+        viewModel.loadPhotoInfo(photo.id.toString())
+
+        viewModel.photoInfoLiveData.observe(viewLifecycleOwner) { description ->
+            setInfo(photo, description)
+        }
+
+
     }
 
-    private fun setInfo(photo: Photo) {
+    private fun setInfo(photo: Photo, description: String) {
         with(binding) {
             infoItemListImage.load(photo.url) {
                 crossfade(true)
@@ -40,8 +50,8 @@ class InfoFragment : Fragment() {
                 error(R.drawable.baseline_sync_disabled_24)
             }
             infoItemListTitle.text = photo.title
-            infoItemListText.text = "SomeText"
+            infoItemListText.text = description
         }
     }
-
 }
+
