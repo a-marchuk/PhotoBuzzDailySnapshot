@@ -5,18 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
 import dagger.hilt.android.AndroidEntryPoint
-import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
+import ua.marchuk.photoBuzzDailySnapshot.data.model.PhotoData
 import ua.marchuk.photobuzz_dailyshapshot.R
 import ua.marchuk.photobuzz_dailyshapshot.databinding.FragmentInfoBinding
 
 @AndroidEntryPoint
 class InfoFragment : Fragment() {
 
-    private val viewModel: InfoFragmentViewModel by viewModels()
     private lateinit var binding: FragmentInfoBinding
     private val args: InfoFragmentArgs by navArgs()
 
@@ -31,26 +29,24 @@ class InfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val photo = args.photo
+        val photoData = args.photoData
 
-        viewModel.loadPhotoInfo(photo.id.toString())
-
-        viewModel.photoInfoLiveData.observe(viewLifecycleOwner) { description ->
-            setInfo(photo, description)
-        }
-
+        setInfo(photoData)
 
     }
 
-    private fun setInfo(photo: Photo, description: String) {
+    private fun setInfo(photoData: PhotoData) {
         with(binding) {
-            infoItemListImage.load(photo.url) {
-                crossfade(true)
-                placeholder(R.drawable.baseline_sync_24)
-                error(R.drawable.baseline_sync_disabled_24)
+            with(photoData) {
+                infoItemListImage.load(photo.url) {
+                    crossfade(true)
+                    placeholder(R.drawable.baseline_sync_24)
+                    error(R.drawable.baseline_sync_disabled_24)
+                }
+                infoItemListTitle.text = photo.title
+                infoItemListText.text = description.description
             }
-            infoItemListTitle.text = photo.title
-            infoItemListText.text = description
+
         }
     }
 }

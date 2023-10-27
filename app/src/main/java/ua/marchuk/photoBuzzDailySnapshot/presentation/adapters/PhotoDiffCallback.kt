@@ -1,14 +1,14 @@
 package ua.marchuk.photoBuzzDailySnapshot.presentation.adapters
 
 import androidx.recyclerview.widget.DiffUtil
-import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
+import ua.marchuk.photoBuzzDailySnapshot.data.model.PhotoData
 
-class PhotoDiffCallback : DiffUtil.ItemCallback<Photo>() {
-    override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean {
-        return oldItem.id == newItem.id
+class PhotoDiffCallback : DiffUtil.ItemCallback<PhotoData>() {
+    override fun areItemsTheSame(oldItem: PhotoData, newItem: PhotoData): Boolean {
+        return oldItem.photo.id == newItem.photo.id
     }
 
-    override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean {
+    override fun areContentsTheSame(oldItem: PhotoData, newItem: PhotoData): Boolean {
         return oldItem == newItem
     }
 }

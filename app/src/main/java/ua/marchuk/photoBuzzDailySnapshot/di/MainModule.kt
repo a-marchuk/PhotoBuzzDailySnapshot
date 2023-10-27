@@ -6,9 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ua.marchuk.photoBuzzDailySnapshot.data.model.room.LocalDatabase
-import ua.marchuk.photoBuzzDailySnapshot.data.model.room.PhotoDao
-import ua.marchuk.photoBuzzDailySnapshot.data.repository.PhotoInfoRepository
+import ua.marchuk.photoBuzzDailySnapshot.data.local.room.LocalDatabase
+import ua.marchuk.photoBuzzDailySnapshot.data.local.room.PhotoDao
 import ua.marchuk.photoBuzzDailySnapshot.data.repository.PhotoRepository
 import javax.inject.Singleton
 
@@ -29,12 +28,6 @@ object MainModule {
     @Singleton
     fun providePhotoRepository(photoDao: PhotoDao): PhotoRepository {
         return PhotoRepository(photoDao)
-    }
-
-    @Provides
-    @Singleton
-    fun providePhotoInfoRepository(): PhotoInfoRepository {
-        return PhotoInfoRepository()
     }
 
 

@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import ua.marchuk.photoBuzzDailySnapshot.data.model.Photo
+import ua.marchuk.photoBuzzDailySnapshot.data.model.PhotoData
 import ua.marchuk.photoBuzzDailySnapshot.presentation.adapters.AdapterInterface
 import ua.marchuk.photoBuzzDailySnapshot.presentation.adapters.PhotosAdapter
 import ua.marchuk.photobuzz_dailyshapshot.databinding.FragmentMainBinding
@@ -40,21 +40,21 @@ class MainFragment : Fragment() {
 
     private fun initializeRecyclerView() {
         adapter = PhotosAdapter(object : AdapterInterface {
-            override fun onItemClick(photo: Photo) {
-                navigateToInfoFragment(photo)
+            override fun onItemClick(photoData: PhotoData) {
+                navigateToInfoFragment(photoData)
             }
         })
         binding.recyclerViewMain.adapter = adapter
     }
 
     private fun observePhotosLiveData() {
-        viewModel.photosLiveData.observe(viewLifecycleOwner) { photos ->
-            adapter.submitList(photos)
+        viewModel.photosLiveData.observe(viewLifecycleOwner) { photosData ->
+            adapter.submitList(photosData)
         }
     }
 
-    private fun navigateToInfoFragment(photo: Photo) {
-        navController.navigate(MainFragmentDirections.actionMainFragmentToInfoFragment(photo))
+    private fun navigateToInfoFragment(photoData: PhotoData) {
+        navController.navigate(MainFragmentDirections.actionMainFragmentToInfoFragment(photoData))
     }
 }
 
